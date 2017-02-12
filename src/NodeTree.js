@@ -11,24 +11,18 @@ export default class NodeTree extends React.Component{
     this.calculateTree = this.calculateTree.bind(this);
   }
   calculateTree(nodes){
-    let types = [];
     function traverseTree(nodes){
-      // Magic happens here
       console.log(nodes);
-      if(nodes && nodes.props && nodes.props.children){
-        types = types.concat([nodes.props.children.type])
-        traverseTree(nodes.props.children);
+      if(nodes){
+        return [<Node component={nodes}>{nodes.props ? traverseTree(nodes.props.children) : null}</Node>];
       }
     }
-    traverseTree(nodes);
-    return types;
+    return traverseTree(nodes);
   }
   render(){
     return(
       <div>
-        {this.calculateTree(this.props.tree).map((node) =>
-          <Node />
-        )}
+        {this.calculateTree(this.props.tree)}
       </div>
     )
   }
