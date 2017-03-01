@@ -42,7 +42,8 @@
 
         ReactDOMFiber.unstable_deferredUpdates(() =>
           this.setState({
-            counter: newCounter
+            counter: newCounter,
+            isPositive: newOperator
           })
         )
       }
