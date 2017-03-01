@@ -26,33 +26,27 @@
         super(props);
         this.state = {
           counter: Math.floor(Math.random() * (10 - 0)),
-          operator: Math.random() < 0.5 ? 'minus' : 'plus',
+          isPositive: Math.random() < 0.5 ? true : false
         }
       }
       componentDidMount(){
         this.count = setInterval(this.count.bind(this), 1000);
       }
-      count(){
-        if(this.state.counter === 10){
-          this.setState({ operator: 'minus'});
-        } else if(this.state.counter === 0){
-          this.setState({ operator: 'plus'});
-        }
 
-        if(this.state.operator === 'plus'){
-          ReactDOMFiber.unstable_deferredUpdates(() =>
-            this.setState({
-              counter: this.state.counter += 1
-            })
-          );
-        } else {
-          ReactDOMFiber.unstable_deferredUpdates(() =>
-            this.setState({
-              counter: this.state.counter -= 1
-            })
-          );
-        }
+      count(){
+        const { counter, isPositive} = this.state;
+          let newOperator = (counter === (isPositive ? 10 : 0)) ?
+            !isPositive:
+            isPositive,
+          newCounter = newOperator ? counter + 1 : counter - 1;
+
+        ReactDOMFiber.unstable_deferredUpdates(() =>
+          this.setState({
+            counter: newCounter
+          })
+        )
       }
+
       render() {
         return <div style={{ lineHeight: '3em' }}>{this.state.counter}</div>;
       }
@@ -62,38 +56,30 @@
       constructor(props){
         super(props);
         this.state = {
-          operator: Math.random() < 0.5 ? 'minus' : 'plus',
-          xpos: Math.floor(Math.random() * (window.innerWidth - 0)),
-          ypos: Math.floor(Math.random() * (window.innerHeight - 0))
+          position: Math.floor(Math.random() * (window.innerWidth - 0)),
+          ypos: Math.floor(Math.random() * (window.innerHeight - 0)),
+          operator: Math.random() < 0.5 ? true : false
         }
       }
       componentDidMount(){
-        this.transition = setInterval(this.transition.bind(this), 10);
-        this.direction = 'left';
+        this.transition = setInterval(this.transition.bind(this), 30);
       }
       transition(){
-        if(this.direction === 'left'){
-          if(this.state.xpos == 0){
-            this.direction = 'right';
-          } else {
-            ReactDOMFiber.unstable_deferredUpdates(() =>
-              this.setState({ xpos: this.state.xpos -= 1 })
-            );
-          }
-        } else {
-          // right
-          if(this.state.xpos == window.innerWidth - 50){
-            this.direction = 'left';
-          } else {
-            ReactDOMFiber.unstable_deferredUpdates(() =>
-              this.setState({ xpos: this.state.xpos += 1 })
-            );
-          }
-        }
+          const { position, toRight} = this.state,
+                newDirection = (position === (toRight ? window.innerWidth - 50 : 0)) ?
+                  !toRight :
+                  toRight,
+                  newPosition = newDirection ? position + 1 : position - 1;
+          ReactDOMFiber.unstable_deferredUpdates(() =>
+            this.setState({
+              position: newPosition,
+              toRight: newDirection
+            })
+          );
       }
       render(){
         return(
-          <div ref="node" style={{ position: 'absolute', top: this.state.ypos, left: this.state.xpos, background: 'blue', borderRadius: '40px', width: '50px', height: '50px', color: 'white', lineHeight: '1'}}>
+          <div ref="node" style={{ position: 'absolute', top: this.state.ypos, left: this.state.position, background: 'blue', borderRadius: '40px', width: '50px', height: '50px', color: 'white', lineHeight: '1'}}>
             <Counter/>
           </div>
         )
