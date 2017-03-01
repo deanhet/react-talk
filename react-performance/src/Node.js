@@ -7,7 +7,8 @@ export default class Node extends React.Component{
       counter: Math.floor(Math.random() * (10 - 0)),
       position: Math.floor(Math.random() * (window.innerWidth - 0)),
       ypos: Math.floor(Math.random() * (window.innerHeight - 0)),
-      operator: Math.random() < 0.5 ? true : false
+      operator: Math.random() < 0.5 ? true : false,
+      toRight: Math.random() < 0.5 ? true : false
     }
     setInterval(() => {
       const { position, toRight} = this.state,
